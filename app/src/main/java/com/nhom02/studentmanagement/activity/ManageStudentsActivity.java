@@ -4,13 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.nhom02.studentmanagement.R;
 import com.nhom02.studentmanagement.adapter.ClassesAdapter;
+import com.nhom02.studentmanagement.adapter.StudentsAdapter;
 import com.nhom02.studentmanagement.helper.DateTimeHelper;
 import com.nhom02.studentmanagement.model.Classes;
 import com.nhom02.studentmanagement.model.Student;
@@ -23,6 +26,10 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
     private EditText etStudentId, etName, etDob;
     private Spinner spClasses;
     private List<Classes> classesList;
+    private List<Student> studentList;
+    private ListView lvStudents;
+
+    private StudentsAdapter studentsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,8 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
         etName = findViewById(R.id.etStuName);
         etDob = findViewById(R.id.etStuDob);
         spClasses = findViewById(R.id.spClasses);
+
+        lvStudents = findViewById(R.id.lvStudents);
 
         fillClassesToSpinner();
 
@@ -45,6 +54,32 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
         spClasses.setAdapter(classesAdapter);
     }
 
+    private void fillStudentsToListView(){
+        StudentDao dao = new StudentDao(this);
+        try {
+            Classes cls = (Classes) spClasses.getSelectedItem();
+            studentList = dao.getAllByClass(cls.getId());
+
+            studentsAdapter = new StudentsAdapter(this, studentList);
+            lvStudents.setAdapter(studentsAdapter);
+
+            spClasses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    fillStudentsToListView();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            Toast.makeText(this, "Error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     public void onClick(View v) {
         StudentDao dao = new StudentDao(this);
