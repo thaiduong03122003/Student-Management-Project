@@ -3,10 +3,12 @@ package com.nhom02.studentmanagement;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
 import com.nhom02.studentmanagement.activity.ListClassesActivity;
+import com.nhom02.studentmanagement.activity.LoginActivity;
 import com.nhom02.studentmanagement.activity.ManageStudentsActivity;
 import com.nhom02.studentmanagement.dialog.NewClassDialog;
 
@@ -38,8 +40,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(mngintent);
         }
         if (view.getId() == R.id.btnLogout) {
-
+            clearAutoLogin();
+            Intent intentLogin = new Intent(this, LoginActivity.class);
+            startActivity(intentLogin);
+            finish();
         }
+    }
+    private void clearAutoLogin() {
+        SharedPreferences preferences = getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
 
+        editor.clear();
+
+        editor.commit();
     }
 }

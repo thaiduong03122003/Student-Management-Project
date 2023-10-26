@@ -58,7 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:ems="10"
-            android:inputType="text" />
+            android:inputType="text"
+            android:text="admin" />
 
         <TextView
             android:id="@+id/textView10"
@@ -73,7 +74,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:ems="10"
-            android:inputType="numberPassword" />
+            android:inputType="numberPassword"
+            android:text="123" />
+
+        <CheckBox
+            android:id="@+id/chkAutoLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tự động đăng nhập" />
 
         <LinearLayout
             android:layout_width="match_parent"
