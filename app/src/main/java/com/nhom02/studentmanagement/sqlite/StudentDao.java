@@ -32,6 +32,20 @@ public class StudentDao {
 
         return db.insert("students", null, values);
     }
+
+    public long update(Student emp) {
+        ContentValues values = new ContentValues();
+        values.put("name", emp.getName());
+        values.put("dob", DateTimeHelper.toString(emp.getDob()));
+        values.put("classid", emp.getClassId());
+
+        return db.update("students", values,"id = ?", new String[]{emp.getId()});
+    }
+
+    public long delete(String id) {
+        return db.delete("students","id = ?", new String[]{id});
+    }
+
     @SuppressLint("Range")
     public List<Student> get(String sql, String ... selectArgs) throws ParseException {
         List<Student> list = new ArrayList<>();

@@ -30,6 +30,7 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
     private ListView lvStudents;
 
     private StudentsAdapter studentsAdapter;
+    private boolean isEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,17 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
         spClasses = findViewById(R.id.spClasses);
 
         lvStudents = findViewById(R.id.lvStudents);
+
+        lvStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Student std = studentList.get(i);
+                etStudentId.setText(std.getId());
+                etName.setText(std.getName());
+                etDob.setText(DateTimeHelper.toString(std.getDob()));
+                isEdit = true;
+            }
+        });
 
         fillClassesToSpinner();
 
@@ -94,16 +106,17 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
 
                 Classes cls = (Classes) spClasses.getSelectedItem();
                 std.setClassId(cls.getId());
-                String msg;
 
-                dao.insert(std);
-
-                Toast.makeText(this, "Đã lưu sinh viên ID: " + std.getId(), Toast.LENGTH_LONG).show();
-
-                etStudentId.setText("");
-                etName.setText("");
-                etDob.setText("");
-
+                if (!isEdit) {
+                    dao.insert(std);
+                    Toast.makeText(this, "Đã lưu sinh viên ID: " + std.getId(), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    dao.update(std);
+                    Toast.makeText(this, "Sinh viên ID " + std.getId() + " đã được cập nhật!", Toast.LENGTH_SHORT).show();
+                }
+                clearInputField();
+                isEdit = false;
                 fillStudentsToListView();
             }
             catch (Exception ex) {
@@ -112,8 +125,25 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
             }
         }
         if (v.getId() == R.id.btnDelete) {
+            if (isEdit && !etStudentId.getText().toString().equals("")) {
+                String id = etStudentId.getText().toString();
 
+                dao.delete(id);
+                Toast.makeText(this, "Đã xóa sinh viên ID " + id + " thành công!", Toast.LENGTH_SHORT).show();
+                clearInputField();
+                id = "";
+                fillStudentsToListView();
+            }
+            else {
+                Toast.makeText(this, "Bạn phải chọn một sinh viên để xóa!", Toast.LENGTH_SHORT).show();
+            }
         }
 
+    }
+
+    private void clearInputField() {
+        etStudentId.setText("");
+        etName.setText("");
+        etDob.setText("");
     }
 }
