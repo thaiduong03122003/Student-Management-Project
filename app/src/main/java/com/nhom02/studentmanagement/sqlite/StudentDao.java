@@ -49,12 +49,15 @@ public class StudentDao {
         return list;
     }
 
+    public List<Student> getALL() throws ParseException {
+        String sql = "SELECT * FROM students";
+
+        return get(sql);
+    }
+
     public List<Student> getAllByClass(Integer classId) throws ParseException {
         String sql = "SELECT * FROM students WHERE classid = ?";
 
         return get(sql, "" + classId);
-    }
-    public int delete (String id) {
-        return db.delete("classes", "id=?", new String[]{id});
     }
 }

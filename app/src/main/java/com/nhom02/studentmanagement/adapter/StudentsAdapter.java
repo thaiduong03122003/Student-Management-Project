@@ -30,8 +30,8 @@ public class StudentsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return list.get(position);
+    public Object getItem(int i) {
+        return list.get(i);
     }
 
     @Override

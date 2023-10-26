@@ -52,6 +52,18 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
         classesList = dao.getAll();
         ClassesAdapter classesAdapter = new ClassesAdapter(this, classesList);
         spClasses.setAdapter(classesAdapter);
+
+        spClasses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                fillStudentsToListView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void fillStudentsToListView(){
@@ -63,17 +75,7 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
             studentsAdapter = new StudentsAdapter(this, studentList);
             lvStudents.setAdapter(studentsAdapter);
 
-            spClasses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    fillStudentsToListView();
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -101,6 +103,8 @@ public class ManageStudentsActivity extends AppCompatActivity implements View.On
                 etStudentId.setText("");
                 etName.setText("");
                 etDob.setText("");
+
+                fillStudentsToListView();
             }
             catch (Exception ex) {
                 ex.printStackTrace();
